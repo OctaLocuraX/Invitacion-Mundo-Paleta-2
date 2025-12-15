@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Mundo Paleta #2</title>
+
+  <style>
+    :root{
+      --bg1:#64b63f;
+      --bg2:#2f5a1d;
+      --panel: rgba(0,0,0,.45);
+      --wood:#8b5a2b;
+      --pink:#ff4fd8;
+      --pink2:#b03092;
+      --txt:#ffffff;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      min-height:100svh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Trebuchet MS", Arial, sans-serif;
+      color: var(--txt);
+      background: radial-gradient(1200px 600px at 50% 0%, rgba(255,255,255,.12), transparent 60%),
+                  linear-gradient(180deg, var(--bg1), var(--bg2));
+      overflow-x:hidden;
+    }
+    .grain{
+      position:fixed; inset:0;
+      pointer-events:none;
+      opacity:.08;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='80' height='80' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+    }
+    .wrap{
+      padding: clamp(18px, 4vw, 32px);
+      padding-top: clamp(22px, 7vw, 60px);
+      display:flex;
+      justify-content:center;
+    }
+    .card{
+      width:min(720px, 100%);
+      border-radius: 18px;
+      border: 4px solid var(--wood);
+      background: var(--panel);
+      box-shadow: 0 14px 40px rgba(0,0,0,.35);
+      padding: clamp(16px, 4vw, 28px);
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:0;
+      border-radius: 14px;
+      box-shadow: inset 0 0 0 4px rgba(0,0,0,.25);
+      pointer-events:none;
+    }
+    .title{
+      text-align:center;
+      margin:0;
+      font-size: clamp(28px, 7vw, 54px);
+      letter-spacing: .5px;
+      text-shadow: 3px 3px 0 rgba(0,0,0,.35);
+      line-height:1.05;
+    }
+    .subtitle{
+      text-align:center;
+      margin: 10px 0 0;
+      font-size: clamp(14px, 3.5vw, 18px);
+      opacity:.95;
+    }
+    .hero{
+      margin: 18px auto 8px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap: 14px;
+    }
+    .paleta{
+      width: clamp(120px, 35vw, 190px);
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
+      animation: float 3s ease-in-out infinite;
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+    .lines{
+      text-align:center;
+      font-size: clamp(15px, 4.2vw, 20px);
+      line-height: 1.35;
+      margin: 8px 0 0;
+      width: min(560px, 100%);
+    }
+    .typeBox{
+      display:block;
+      min-height: 6.2em; /* para que no salte el layout mientras escribe */
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(0,0,0,.25);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.18);
+    }
+    .cursor{
+      display:inline-block;
+      width: 10px;
+      margin-left: 2px;
+      animation: blink 1s steps(2, end) infinite;
+      opacity:.9;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.28);
+      border: 1px solid rgba(255,255,255,.14);
+      font-size: clamp(12px, 3.3vw, 14px);
+      margin: 10px auto 0;
+      justify-content:center;
+    }
+    .btnRow{
+      display:flex;
+      gap: 12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top: 18px;
+    }
+    button{
+      appearance:none;
+      border:0;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: clamp(15px, 4.2vw, 18px);
+      font-weight: 800;
+      color:#fff;
+      background: linear-gradient(180deg, var(--pink), #ff79e8);
+      box-shadow: 0 6px 0 var(--pink2), 0 14px 22px rgba(0,0,0,.25);
+      cursor:pointer;
+      width: min(380px, 100%);
+      transition: transform .08s ease, filter .15s ease;
+    }
+    button:active{
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 var(--pink2), 0 10px 18px rgba(0,0,0,.22);
+      filter: brightness(1.05);
+    }
+    .smallBtn{
+      background: linear-gradient(180deg, #3bd4ff, #7ae7ff);
+      box-shadow: 0 6px 0 #1d8aa6, 0 14px 22px rgba(0,0,0,.25);
+      width: min(210px, 100%);
+      font-weight: 800;
+    }
+    .smallBtn:active{
+      box-shadow: 0 2px 0 #1d8aa6, 0 10px 18px rgba(0,0,0,.22);
+    }
+
+    .panel{
+      margin-top: 16px;
+      border-radius: 16px;
+      border: 3px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.35);
+      padding: 14px;
+      display:none;
+      animation: pop .22s ease;
+    }
+    .panel p{
+      margin: 10px 0;
+      font-size: clamp(14px, 4vw, 18px);
+      line-height:1.35;
+    }
+    .footerNote{
+      text-align:center;
+      margin-top: 14px;
+      opacity:.9;
+      font-size: clamp(12px, 3.4vw, 14px);
+    }
+
+    @keyframes float{
+      0%,100%{ transform: translateY(0) }
+      50%{ transform: translateY(-10px) }
+    }
+    @keyframes pop{
+      from{ transform: scale(.98); opacity:0 }
+      to{ transform: scale(1); opacity:1 }
+    }
+    .safeBottom{ height: env(safe-area-inset-bottom); }
+  </style>
+</head>
+
+<body>
+  <div class="grain"></div>
+
+  <div class="wrap">
+    <main class="card" role="main" aria-label="Invitación Mundo Paleta #2">
+      <h1 class="title">🍭 Mundo Paleta #2 🍭</h1>
+      <p class="subtitle">Invitación oficial — Minecraft Edition</p>
+
+      <section class="hero">
+        <!-- Paleta colorida (SVG embebido) -->
+        <svg class="paleta" viewBox="0 0 256 256" aria-label="Paleta colorida" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#ff6ad5"/>
+              <stop offset="1" stop-color="#ffb86c"/>
+            </linearGradient>
+            <linearGradient id="stick" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#f2d6a2"/>
+              <stop offset="1" stop-color="#caa46a"/>
+            </linearGradient>
+          </defs>
+          <path d="M128 18c-46 0-84 36-84 82 0 36 22 63 48 84 10 8 14 12 14 24v16c0 6 5 10 10 10h24c6 0 10-5 10-10v-16c0-12 4-16 14-24 26-21 48-48 48-84 0-46-38-82-84-82z" fill="url(#g)"/>
+          <path d="M70 90c18-44 96-54 116-10" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="18" stroke-linecap="round"/>
+          <circle cx="98" cy="122" r="14" fill="#3bd4ff" opacity=".95"/>
+          <circle cx="146" cy="148" r="18" fill="#7cff6b" opacity=".95"/>
+          <circle cx="150" cy="106" r="10" fill="#ffd35a" opacity=".95"/>
+          <path d="M112 198h32v16c0 6-5 10-10 10h-12c-6 0-10-5-10-10v-16z" fill="rgba(0,0,0,.15)"/>
+          <path d="M118 224h20v28c0 6-5 10-10 10s-10-4-10-10v-28z" fill="url(#stick)"/>
+          <path d="M118 224h20" stroke="rgba(0,0,0,.12)" stroke-width="6" stroke-linecap="round"/>
+        </svg>
+
+        <div class="lines">
+          <!-- Caja de texto con animación tipo escribir -->
+          <div class="typeBox">
+            <span id="typed"></span><span class="cursor">▌</span>
+          </div>
+
+          <div class="badge">🎧 + 🧩 Discord de Octa • Mods • Organización</div>
+        </div>
+      </section>
+
+      <div class="btnRow">
+        <button id="btnInfo" type="button">Hacé click acá para más info</button>
+        <button id="btnSound" class="smallBtn" type="button">🔊 Sonidos: ON</button>
+        <button id="btnMusic" class="smallBtn" type="button">🎵 Música: ON</button>
+      </div>
+
+      <section id="panel" class="panel" aria-live="polite">
+        <p>💰 <b>Costo de inscripción:</b><br>
+          Se charla dependiendo de <b>cuántos seamos</b>.</p>
+
+        <p>🧩 <b>Mods:</b><br>
+          Vamos a armar un <b>Discord informativo</b> (Discord de Octa) para analizar y decidir los mods entre todos.</p>
+
+        <p>🔥 Los invitados aun no estan confirmados pero la idea es hacerlo lo antes posible ! </p>
+      </section>
+
+      <p class="footerNote">Patrocinadores : LuchoKiosko24horas </p>
+      <div class="safeBottom"></div>
+    </main>
+  </div>
+
+  <script>
+    // =========================
+    // 1) AUDIO (sin archivos)
+    // =========================
+    let audioEnabled = true;   // soniditos
+    let musicEnabled = true;   // música fondo
+    let ctx = null;
+
+    // nodos música
+    let musicMaster = null;
+    let musicTimer = null;
+    let noiseNode = null;
+
+    function ensureAudio(){
+      if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+      proveResume();
+    }
+    function proveResume(){
+      if (ctx && ctx.state === "suspended") ctx.resume();
+    }
+
+    function vib(ms=18){
+      try { if (navigator.vibrate) navigator.vibrate(ms); } catch(e){}
+    }
+
+    // beep simple (sonidos "minecraft-like")
+    function beep({freq=440, type="square", dur=0.06, vol=0.10, detune=0, when=0}={}){
+      if (!audioEnabled) return;
+      ensureAudio();
+      const t0 = ctx.currentTime + when;
+
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = type;
+      o.frequency.value = freq;
+      o.detune.value = detune;
+
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(vol, t0 + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+
+      o.connect(g); g.connect(ctx.destination);
+      o.start(t0);
+      o.stop(t0 + dur + 0.02);
+    }
+
+    function uiClick(){
+      beep({freq: 880, type:"square", dur:0.045, vol:0.10});
+      beep({freq: 660, type:"square", dur:0.055, vol:0.08, when:0.03});
+    }
+    function openWhoosh(){
+      beep({freq: 392, type:"square", dur:0.05, vol:0.08});
+      beep({freq: 523, type:"square", dur:0.05, vol:0.08, when:0.05});
+      beep({freq: 659, type:"square", dur:0.07, vol:0.09, when:0.10});
+    }
+
+    // --------
+    // Música fondo estilo "calm" (sintética, loop)
+    // --------
+    function startMusic(){
+      if (!musicEnabled) return;
+      ensureAudio();
+      if (musicMaster) return; // ya está sonando
+
+      musicMaster = ctx.createGain();
+      musicMaster.gain.value = 0.06; // volumen general (bajito)
+      musicMaster.connect(ctx.destination);
+
+      // “viento suave” con ruido filtrado
+      noiseNode = createNoise();
+      const noiseFilter = ctx.createBiquadFilter();
+      noiseFilter.type = "lowpass";
+      noiseFilter.frequency.value = 700;
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.value = 0.14;
+
+      noiseNode.connect(noiseFilter);
+      noiseFilter.connect(noiseGain);
+      noiseGain.connect(musicMaster);
+
+      // pad suave con triángulo + filtro
+      const padFilter = ctx.createBiquadFilter();
+      padFilter.type = "lowpass";
+      padFilter.frequency.value = 900;
+      padFilter.Q.value = 0.7;
+
+      const padGain = ctx.createGain();
+      padGain.gain.value = 0.18;
+
+      padFilter.connect(padGain);
+      padGain.connect(musicMaster);
+
+      // secuencia simple tipo calm
+      const scale = [220, 247, 277, 330, 370, 440]; // A3 B3 C#4 E4 F#4 A4-ish
+      let step = 0;
+
+      function playPadNote(freq, t){
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = "triangle";
+        o.frequency.setValueAtTime(freq, t);
+
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.16, t + 0.06);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 2.2);
+
+        o.connect(g);
+        g.connect(padFilter);
+
+        o.start(t);
+        o.stop(t + 2.25);
+      }
+
+      // ticker musical
+      musicTimer = setInterval(() => {
+        if (!ctx || !musicEnabled || !musicMaster) return;
+        const now = ctx.currentTime + 0.02;
+
+        // patrón lento (cada 1.5s)
+        const base = scale[(step) % scale.length];
+        const harmony = scale[(step + 3) % scale.length];
+
+        playPadNote(base, now);
+        playPadNote(harmony * 0.5, now + 0.05); // una octava abajo suave
+
+        step++;
+      }, 1500);
+    }
+
+    function stopMusic(){
+      if (musicTimer) { clearInterval(musicTimer); musicTimer = null; }
+      if (noiseNode) { try{ noiseNode.disconnect(); }catch(e){} noiseNode = null; }
+      if (musicMaster) { try{ musicMaster.disconnect(); }catch(e){} musicMaster = null; }
+    }
+
+    function createNoise(){
+      const bufferSize = 2 * ctx.sampleRate;
+      const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+
+      const whiteNoise = ctx.createBufferSource();
+      whiteNoise.buffer = noiseBuffer;
+      whiteNoise.loop = true;
+      whiteNoise.start();
+      return whiteNoise;
+    }
+
+    // iOS: audio sólo arranca después de un toque del usuario
+    document.addEventListener("touchstart", () => {
+      ensureAudio();
+      if (musicEnabled) startMusic();
+    }, { once: true });
+
+    // =========================
+    // 2) TYPEWRITER
+    // =========================
+    const typedEl = document.getElementById("typed");
+    const textToType =
+`Hola amigo, ¿cómo estás?
+Estás oficialmente invitado al
+Mundo Paleta #2 en Minecraft.
+
+Como siempre la idea es para jugar, reírnos y armar el mundo entre todos sin dejar a nadie atras `;
+
+    let i = 0;
+    function typeNext(){
+      if (i >= textToType.length) return;
+      const ch = textToType[i++];
+      typedEl.textContent += ch;
+
+      // sonidito sutil cada tanto (muy bajito) para que no sea molesto
+      if (audioEnabled && ctx){
+        if (ch !== " " && ch !== "\n" && Math.random() < 0.28){
+          beep({freq: 520 + Math.random()*120, type:"square", dur:0.02, vol:0.03});
+        }
+      }
+
+      const delay = (ch === "\n") ? 250 : 18 + Math.random()*35;
+      setTimeout(typeNext, delay);
+    }
+    // arranca escribir apenas cargue
+    setTimeout(typeNext, 400);
+
+    // =========================
+    // 3) UI BOTONES
+    // =========================
+    const btnInfo = document.getElementById("btnInfo");
+    const btnSound = document.getElementById("btnSound");
+    const btnMusic = document.getElementById("btnMusic");
+    const panel = document.getElementById("panel");
+
+    btnInfo.addEventListener("click", () => {
+      ensureAudio();
+      uiClick(); vib(18);
+
+      const isOpen = panel.style.display === "block";
+      if (isOpen){
+        panel.style.display = "none";
+      } else {
+        panel.style.display = "block";
+        openWhoosh(); vib(28);
+        panel.scrollIntoView({behavior:"smooth", block:"start"});
+      }
+
+      // si el usuario tocó, podemos iniciar música si está ON
+      if (musicEnabled) startMusic();
+    });
+
+    btnSound.addEventListener("click", () => {
+      ensureAudio();
+      audioEnabled = !audioEnabled;
+      btnSound.textContent = audioEnabled ? "🔊 Sonidos: ON" : "🔇 Sonidos: OFF";
+      uiClick(); vib(12);
+      if (musicEnabled) startMusic();
+    });
+
+    btnMusic.addEventListener("click", () => {
+      ensureAudio();
+      musicEnabled = !musicEnabled;
+      btnMusic.textContent = musicEnabled ? "🎵 Música: ON" : "🎵 Música: OFF";
+      uiClick(); vib(12);
+
+      if (musicEnabled) startMusic();
+      else stopMusic();
+    });
+
+    // arranca música (pero sólo sonará cuando el usuario toque en iPhone)
+    // startMusic(); // lo dejamos “armado”, iOS lo bloquearía sin toque
+  </script>
+</body>
+</html>
