@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Libro de Objetivos - Mundo Paleta #2</title>
+
+<style>
+:root{
+  --bg1:#2e4f1f;
+  --bg2:#121a0c;
+  --paper:#f4edd6;
+  --paper2:#efe3bf;
+  --ink:#1b1a16;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(180deg,var(--bg1),var(--bg2));
+  font-family:system-ui,Segoe UI,Roboto,Arial;
+}
+.book{
+  width:min(900px,95%);
+  aspect-ratio:16/9;
+  background:#6a4b22;
+  border-radius:20px;
+  padding:18px;
+  box-shadow:0 25px 50px rgba(0,0,0,.45);
+}
+.pages{
+  width:100%;
+  height:100%;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  background:var(--paper);
+  border-radius:14px;
+  overflow:hidden;
+}
+.page{
+  padding:24px;
+  background:linear-gradient(180deg,var(--paper),var(--paper2));
+  color:var(--ink);
+}
+.page.left{border-right:2px solid rgba(0,0,0,.15)}
+h1{
+  margin:0 0 10px;
+  font-size:28px;
+}
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  background:rgba(0,0,0,.1);
+  border-radius:20px;
+  font-weight:700;
+  font-size:13px;
+}
+.obj{
+  margin-top:16px;
+  display:flex;
+  gap:14px;
+  font-size:22px;
+  font-weight:900;
+}
+.icon{font-size:34px}
+.sub{
+  margin-top:8px;
+  font-size:15px;
+  opacity:.85;
+}
+.controls{
+  margin-top:14px;
+  display:flex;
+  justify-content:center;
+  gap:14px;
+}
+button{
+  border:none;
+  padding:12px 18px;
+  border-radius:12px;
+  font-weight:900;
+  cursor:pointer;
+  background:#ff4fd8;
+  color:#fff;
+}
+button:disabled{opacity:.5}
+@media(max-width:700px){
+  .pages{grid-template-columns:1fr}
+  .page.left{display:none}
+}
+</style>
+</head>
+
+<body>
+
+<div class="book">
+  <div class="pages">
+    <div class="page left">
+      <h1 id="ltitle"></h1>
+      <span class="badge" id="lpage"></span>
+      <div class="obj">
+        <div class="icon" id="licon"></div>
+        <div>
+          <div id="ltext"></div>
+          <div class="sub" id="lsub"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page">
+      <h1 id="rtitle"></h1>
+      <span class="badge" id="rpage"></span>
+      <div class="obj">
+        <div class="icon" id="ricon"></div>
+        <div>
+          <div id="rtext"></div>
+          <div class="sub" id="rsub"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="controls">
+  <button id="prev">⬅ Anterior</button>
+  <button id="next">Siguiente ➡</button>
+</div>
+
+<script>
+const pages=[
+{
+ title:"Objetivos (opcionales)",
+ icon:"📖",
+ text:"Libro de objetivos del Mundo Paleta #2.",
+ sub:"Este es una pequeña IDEA de los objetivos que me gustaria que cumplamos en el server, no es oficial ni nada. Todo se debate en discord."
+},
+{
+ title:"Objetivo 1",
+ icon:"🌾",
+ text:"Construir un mínimo de 2 granjas.",
+ sub:"XP, comida o mobs."
+},
+{
+ title:"Objetivo 2",
+ icon:"🏠",
+ text:"Una casa por integrante.",
+ sub:"Nada de vivir todos juntos ni tocase en la misma casa."
+},
+{
+ title:"Objetivo 3",
+ icon:"🧭",
+ text:"Explorar al menos el 80% de los mods de exploración.",
+ sub:"Biomas, estructuras, dungeons, dimensiones etc ..."
+},
+{
+ title:"Objetivo 4",
+ icon:"⛏️",
+ text:"Conseguir armadura Full Netherite.",
+ sub:"Armadura enterita."
+},
+{
+ title:"Objetivo 5",
+ icon:"🐉",
+ text:"Matar al Dragón del End todos juntos en Discord y conseguir Elytras.",
+ sub:"Evento épico obligatorio que nunca hicimos."
+}
+];
+
+let i = 0;
+const L = (id) => document.getElementById(id);
+const prev = L("prev");
+const next = L("next");
+
+function render(){
+  const l = pages[i];
+  const r = pages[i+1] || {
+    title: "FIN",
+    icon: "🧱",
+    text: "Mundo Paleta #2\n\nTodos los objetivos han sido definidos.\nAhora queda lo más importante:\n\nCumplirlos juntos.",
+    sub: "Servidor cerrado. Compromiso abierto."
+  };
+
+  L("ltitle").textContent = l.title;
+  L("lpage").textContent  = "Página " + i;
+  L("licon").textContent  = l.icon;
+  L("ltext").textContent  = l.text;
+  L("lsub").textContent   = l.sub;
+
+  L("rtitle").textContent = r.title;
+  L("rpage").textContent  = "Página " + (i+1);
+  L("ricon").textContent  = r.icon;
+  L("rtext").textContent  = r.text;
+  L("rsub").textContent   = r.sub;
+
+  prev.disabled = i <= 0;
+  next.disabled = i >= pages.length - 1;
+}
+
+prev.onclick = () => { if (i > 0) { i--; render(); } };
+next.onclick = () => { if (i < pages.length - 1) { i++; render(); } };
+
+render();
+</script>
+
+</body>
+</html>
